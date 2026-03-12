@@ -1,3 +1,4 @@
+
 # ExoStress Twin: A High-Fidelity Digital Twin for TRAPPIST-1e Habitability Exploration
 
 **Interactive real-time simulation of tidally locked exoplanet climate, hydrology, and biosignatures.**  
@@ -5,7 +6,7 @@ Developed for the *International Digital Twins in Astrobiology Hackathon (HACK-4
 
 **Version:** 1.0.0 (Hackathon release)  
 **Date:** March 12, 2026  
-**Authors:** [Jan Domański](https://github.com/jandomanski), [Sandra Zaremba](https://github.com/sandrazaremba), [Kamila Bąk](https://github.com/kamilabak)
+**Authors:** [Jan Domański](https://github.com/jaaneeczek), [Sandra Zaremba](https://github.com/saska005), [Kamila Bąk](https://github.com/sehunek)
 
 [![Hackathon](https://img.shields.io/badge/HACK--4--SAGES-2026-blueviolet)](https://hack-4-sages.org)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://python.org)
