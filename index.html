@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>ExoStress Twin</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <header class="glass-panel">
+        <h1>EXOSTRESS TWIN // <span style="font-weight: 300; color: #8892b0;">TRAPPIST-1e TELEMETRY</span></h1>
+    </header>
+
+    <div class="main-container">
+        
+        <section id="controls" class="glass-panel side-panel">
+            
+            <div id="telemetry-panel">
+                <div class="tel-title">> TARGET SYSTEM</div>
+                <div class="tel-grid">
+                    <div class="tel-label">STAR MASS:</div><div class="tel-val"><span id="tel-mstar">--</span> M_sun</div>
+                    <div class="tel-label">ORBIT:</div><div class="tel-val"><span id="tel-orbit">--</span> AU</div>
+                    <div class="tel-label">PLANET MASS:</div><div class="tel-val"><span id="tel-mplan">--</span> M_earth</div>
+                    <div class="tel-label">GRAVITY:</div><div class="tel-val"><span id="tel-grav">--</span> G</div>
+                </div>
+                
+                <hr style="border-color: rgba(0,255,204,0.2); margin: 12px 0;">
+                
+                <div class="tel-title">> ORBITAL DYNAMICS</div>
+                <div class="tel-info">
+                    <span style="color:#ffcc00; font-weight: bold;">INFO:</span> Close habitable orbits around M-Dwarfs create immense tidal forces, causing rapid rotation synchronization.
+                </div>
+                
+                <div class="tel-grid">
+                    <div class="tel-label">LOCK TIME:</div><div class="tel-val"><span id="tel-tlock">--</span> YRS</div>
+                    <div class="tel-label">EARTH-EQ ORBIT:</div><div class="tel-val"><span id="tel-aeq">--</span> AU</div>
+                    <div class="tel-label">STEADY STATE:</div><div class="tel-val" id="tel-steady">--</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>ATMOSPHERIC DIFFUSION: <span id="diff-val">0.05</span></label>
+                <input type="range" id="diff-slider" min="0.00" max="0.15" step="0.01" value="0.05">
+            </div>
+            
+            <div class="control-group">
+                <label>PLANETARY ALBEDO: <span id="albedo-val">0.3</span></label>
+                <input type="range" id="albedo-slider" min="0.0" max="0.8" step="0.1" value="0.3">
+            </div>
+
+            <div class="control-group">
+                <label>BASE GREENHOUSE (CO2): <span id="greenhouse-val">0.10</span></label>
+                <input type="range" id="greenhouse-slider" min="0.0" max="0.8" step="0.05" value="0.10">
+            </div>
+            
+            <div class="scenario-buttons">
+                <button id="btn-earth" class="btn-scenario">NOMINAL</button>
+                <button id="btn-snowball" class="btn-scenario">SNOWBALL</button>
+                <button id="btn-venus" class="btn-scenario">RUNAWAY</button>
+            </div>
+            
+            <div class="control-group" style="margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <label>M-DWARF FLARE INTENSITY: <span id="flare-val">5.0</span>x</label>
+                <input type="range" id="flare-slider" min="2.0" max="15.0" step="1.0" value="5.0">
+            </div>
+
+            <button id="flareBtn" class="btn-danger">TRIGGER FLARE EVENT</button>
+            <button id="exportBtn" class="btn-export">↓ EXPORT MISSION LOG (CSV)</button>
+
+            <div style="font-size: 0.5rem; color: #555; text-align: center; margin-top: auto; padding-top: 20px; line-height: 1.4;">
+                DATA SOURCES: <a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank" style="color: #8892b0; text-decoration: none;">NASA Exoplanet Archive (2024)</a><br>
+                TRAPPIST-1 params ref: <a href="https://iopscience.iop.org/article/10.3847/PSJ/abc0e8" target="_blank" style="color: #8892b0; text-decoration: none;">Agol et al. (2021)</a>
+            </div>
+        </section>
+
+        <section id="charts">
+            <div id="heatmap" class="glass-panel plot-container"></div>
+            <div id="tempChart" class="glass-panel plot-container"></div>
+            <div id="waterChart" class="glass-panel plot-container"></div>
+            
+           <div id="kpi-container" class="glass-panel" style="display: flex; align-items: center; justify-content: center; padding: 20px; height: 100%; box-sizing: border-box;">
+                
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 0.8rem; color: #8892b0; letter-spacing: 2px;">HABITABILITY</div>
+                    <div id="habitability" style="color: #00ffcc; font-size: 3.5rem; font-weight: 700; text-shadow: 0 0 20px rgba(0, 255, 204, 0.4); margin-top: 5px;">‑‑ %</div>
+                </div>
+                
+                <div style="width: 1px; height: 80px; background: rgba(255,255,255,0.1); margin: 0 20px;"></div>
+                
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 0.8rem; color: #8892b0; letter-spacing: 2px;">ATMOSPHERIC CH₄</div>
+                    <div id="biosignatures" style="color: #ff33aa; font-size: 3.5rem; font-weight: 700; text-shadow: 0 0 20px rgba(255, 51, 170, 0.4); margin-top: 5px;">‑‑</div>
+                </div>
+                
+            </div>
+
+            <div id="copilot-panel" class="glass-panel" style="display: flex; flex-direction: column; padding: 15px; margin-top: 0; background: rgba(30, 30, 40, 0.7); border: 1px solid rgba(216, 180, 226, 0.3);">
+                <div class="tel-title" style="color:#d8b4e2; margin-bottom: 8px;">> GenAI XAI-COPILOT</div>
+                <div id="chat-history" style="flex: 1; min-height: 90px;">
+                    <div class="chat-msg ai-msg">System initialized. Awaiting queries...</div>
+                </div>
+                <div class="chat-input-area" style="margin-top: 10px;">
+                    <input type="text" id="chat-input" placeholder="Ask AI about current climate state...">
+                    <button id="chat-send">▶</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
